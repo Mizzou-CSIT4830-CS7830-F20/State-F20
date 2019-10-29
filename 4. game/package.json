@@ -1,0 +1,6 @@
+{
+  "name": "game-example",
+  "version": "0.0.1",
+  "description": "my fifth socket.io app",
+  "dependencies": {}
+}

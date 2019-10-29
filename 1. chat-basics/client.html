@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!-- Created by Professor Wergeles at the University of Missouri -->
+<html>
+	<head>
+		<title>WebSocket Chat</title>
+        <meta charset="utf-8">
+        <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+		<script>
+			$(function() {
+				
+                
+                function displayMessage(msg) { 
+					var $li = $("<li>");
+                    
+					$li.html(msg);
+                    
+					$("#messages").prepend($li); 
+                }
+			});
+		</script>
+	</head>
+	<body>
+		<form>
+			<input type="text" id="message" autocomplete="off" autofocus><button>Send</button>
+		</form>
+		<ul id="messages"></ul>
+	</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<!-- Created by Professor Wergeles at the University of Missouri -->
+<html>
+	<head>
+		<title>Web Sockets</title>
+        <meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<style>
+			body {
+				text-align: center;
+			}
+			#game {
+				display: none;
+				border: 1px solid black;
+			}
+			#game, #mainMenu {
+				margin-top: 150px;
+			}
+		</style>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+        <script src="https://www.professorwergeles.com/cdn/jquery.hotkeys.js"></script>
+		<script src="https://www.professorwergeles.com/cdn/key_status.js"></script>
+        
+		<script>
+			// This HTML5 game is based in part off of a tutorial here:
+			// http://www.html5rocks.com/en/tutorials/canvas/notearsgame/
+			$(function() {
+				// When the user clicks play...
+				$("#play").click(function() {
+					// Fade out the main menu...
+					$("#mainMenu").fadeOut(function(){
+						// Then, fade in the game
+						$("#game").fadeIn();
+						
+						
+					});
+				});
+			});
+			
+			function startGame() {
+				var canvas = document.getElementById("game");
+				var c = canvas.getContext("2d");
+				var fps = 30;
+				
+				var player = {
+					x: 0,
+					y: 0,
+					width: 50,
+					height: 50,
+					name: $("#name").val(),
+					color: $("#color").val()
+				};
+				var otherPlayers = [];
+				
+				// Connect to WebSocket server via socket.io
+				// http://socket.io/
+				var socket = io();
+				
+				
+				
+				// Whenever there's an update from another player...
+				socket.on("update", function(otherPlayer) {
+					// check to see if we know about that other player
+					var inArray = otherPlayers.some(function(op, index) {
+						// If they exist in our otherPlayers array, update them
+						if (op.name == otherPlayer.name) {
+							otherPlayers[index] = otherPlayer;
+							return true;
+						}
+					});
+					// Else, if they are not in our array, add them
+					if (!inArray) {
+						otherPlayers.push(otherPlayer);
+					}
+				});
+				
+				
+				
+				
+				function draw() {
+					
+					canvas.width = canvas.width;
+					
+					drawPlayer([player]);
+					drawPlayer(otherPlayers);	
+				}
+				
+				function drawPlayer(players) {
+					players.forEach(function(player) {
+						c.fillStyle = player.color;
+						c.fillRect(player.x, player.y, player.width, player.height);
+						c.fillStyle = "#000";
+						c.font = "normal 14pt Arial";
+						c.fillText(player.name, player.x+player.width+2, player.y-2);
+					});
+				}
+				
+				
+				function update() {
+					if (keydown.left) player.x -= 5;
+					if (keydown.right) player.x += 5;
+					if (keydown.up) player.y -= 5;
+					if (keydown.down) player.y += 5;
+					
+					
+					if (keydown.left || keydown.right || keydown.up || keydown.down) {
+						socket.emit("playerMove", player);
+					}
+				}
+			};
+		</script>
+	</head>
+	<body>
+		<div id="mainMenu">
+			<h1>Web Socket Game</h1>
+			<input type="text" id="name">
+			<input type="color" id="color">
+			<button type="button" id="play" class="btn btn-success">Play</button>
+		</div>
+		<canvas id="game" width="800" height="500"></canvas>
+	</body>
+</html>
