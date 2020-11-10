@@ -2,5 +2,7 @@
   "name": "userlist-example",
   "version": "0.0.1",
   "description": "my fourth socket.io app",
-  "dependencies": {}
+  "dependencies": {
+    "socket.io": "^3.0.0"
+  }
 }

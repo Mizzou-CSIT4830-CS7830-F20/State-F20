@@ -2,7 +2,7 @@
 
 var app = require('http').createServer(handler);
 var fs = require('fs');
-var port = 8000;
+var port = 8001;
 
 function handler(req, res) {
 	fs.readFile("client.html", function(err, data) {

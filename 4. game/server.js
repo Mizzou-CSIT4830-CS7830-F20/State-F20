@@ -27,14 +27,17 @@ io.on("connection", function(socket) {
 	socket.on("createPlayer", function(player) {
 		console.log(player.name + " connected");
 		
-		
+        // tell everyone else about our player information 
+		socket.broadcast.emit("update", player); 
 	});
 	
 	socket.on("playerMove", function(player) {
-		
+        // tell everyone else about our player location
+		socket.broadcast.emit("update", player); 
 	});
 	
 	socket.on("disconnect", function(p) {
 		console.log("User disconnected");
 	});
+    
 });

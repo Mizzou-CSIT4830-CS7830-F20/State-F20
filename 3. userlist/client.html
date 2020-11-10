@@ -20,7 +20,8 @@
                         
                         addToList(you);
                         
-                        
+                        // sending data - telling the server that we've joined 
+                        socket.emit("join", you); 
                     }
                 });
                 
@@ -33,10 +34,16 @@
                     $("#users").append(li);
                 }
                 
+                // getting data 
                 socket.on("updateClient", function(clients) {
                     console.dir(clients);
                     
+                    // empty the list and add users (easy way to do an update) 
+                    $("#users").empty(); 
                     
+                    for(var user in clients){
+                        addToList(clients[user]); 
+                    }
                 });
             });
         </script>

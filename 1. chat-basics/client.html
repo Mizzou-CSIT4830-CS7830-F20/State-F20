@@ -8,10 +8,24 @@
 		<script>
 			$(function() {
 				
+                $("form").submit(function(e){
+                    // prevent the form from submitting, disables the refresh
+                    e.preventDefault();  
+                    
+                    // get the message value
+                    var msg = $("#message").val(); 
+                    
+                    // post the message 
+                    displayMessage(msg); 
+                    
+                    // clear the old message
+                    $("#message").val(""); 
+                });
                 
                 function displayMessage(msg) { 
 					var $li = $("<li>");
                     
+                    // attach the message 
 					$li.html(msg);
                     
 					$("#messages").prepend($li); 

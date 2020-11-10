@@ -21,7 +21,10 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+<!--        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>-->
+        
+        <script src="/socket.io/socket.io.js"></script>
+        
         <script src="https://www.professorwergeles.com/cdn/jquery.hotkeys.js"></script>
 		<script src="https://www.professorwergeles.com/cdn/key_status.js"></script>
         
@@ -36,7 +39,7 @@
 						// Then, fade in the game
 						$("#game").fadeIn();
 						
-						
+						startGame(); 
 					});
 				});
 			});
@@ -60,7 +63,8 @@
 				// http://socket.io/
 				var socket = io();
 				
-				
+                // tell the server that we have joined officially 
+				socket.emit("createPlayer", player); 
 				
 				// Whenever there's an update from another player...
 				socket.on("update", function(otherPlayer) {
@@ -78,7 +82,11 @@
 					}
 				});
 				
-				
+                // game loop 
+                setInterval(function(){
+                    update(); 
+                    draw(); 
+                }, 1000/fps); 
 				
 				
 				function draw() {
@@ -106,7 +114,7 @@
 					if (keydown.up) player.y -= 5;
 					if (keydown.down) player.y += 5;
 					
-					
+					// Notify the server of updated position 
 					if (keydown.left || keydown.right || keydown.up || keydown.down) {
 						socket.emit("playerMove", player);
 					}
@@ -124,3 +132,4 @@
 		<canvas id="game" width="800" height="500"></canvas>
 	</body>
 </html>
+
